@@ -1,0 +1,78 @@
+{
+  "common": [
+    {
+      "name": "Sharks",
+      "value": 250,
+      "quantity": [5, 20]
+    },
+    {
+      "name": "Blood Runes",
+      "value": 368,
+      "quantity": [50, 200]
+    },
+    {
+      "name": "Death Runes",
+      "value": 220,
+      "quantity": [50, 200]
+    },
+    {
+      "name": "Amulet of glory (4)",
+      "value": 12000,
+      "quantity": [1, 1]
+    }
+  ],
+  "uncommon": [
+    {
+      "name": "Rune Platebody",
+      "value": 38000,
+      "quantity": [1, 1]
+    },
+    {
+      "name": "Mystic robe top",
+      "value": 72800,
+      "quantity": [1, 1]
+    },
+    {
+      "name": "Dragon boots",
+      "value": 285000,
+      "quantity": [1, 1],
+      "rarity": []
+    }
+  ],
+  "rare": [
+    {
+      "name": "Dharok's Helm",
+      "value": 300000,
+      "quantity": [1, 1]
+    },
+    {
+      "name": "Dharok's Platebody",
+      "value": 565200,
+      "quantity": [1, 1]
+    },
+    {
+      "name": "Dharok's Platelegs",
+      "value": 900000,
+      "quantity": [1, 1]
+    },
+    {
+      "name": "Dharok's Axe",
+      "value": 654300,
+      "quantity": [1, 1]
+    }
+  ],
+  "super": [
+    {
+      "name": "Abyssal whip",
+      "value": 2147483647,
+      "quantity": [1, 1]
+    }
+  ],
+  "ultra": [
+    {
+      "name": "Rubber Chicken",
+      "value": 2147483647,
+      "quantity": [1, 1]
+    }
+  ]
+}
