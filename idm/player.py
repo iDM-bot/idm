@@ -76,7 +76,7 @@ class Player(commands.Cog):
         depleted_health_block = '░'
         remaining_health_block = '█'
 
-        health_blocks = m.floor(self.__health / 10.0)
+        health_blocks = m.ceil(self.__health / 10.0)
 
         return remaining_health_block * health_blocks + depleted_health_block * (10 - health_blocks)
     
@@ -84,7 +84,7 @@ class Player(commands.Cog):
         depleted_spec_block = '░'
         remaining_spec_block = '█'
 
-        spec_blocks = m.floor(self.__spec / 10.0)
+        spec_blocks = m.ceil(self.__spec / 10.0)
 
         return remaining_spec_block * spec_blocks + depleted_spec_block * (10 - spec_blocks)
     
