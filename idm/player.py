@@ -17,6 +17,8 @@ class Player(commands.Cog):
         self.__discord_display_name = discord_display_name
         self.__health = 99
         self.__spec = 100
+        self.__dice_losses = 0
+        self.__dice_wins = 0
         
     def start_timer(self):
         self.__start_time = time.time()
@@ -29,6 +31,22 @@ class Player(commands.Cog):
   
     def set_wins(self, wins):
         self.__wins = wins
+    
+    def get_dice_wins(self):
+        return self.__dice_wins
+    
+    def get_dice_losses(self):
+        return self.__dice_losses
+    
+    def set_dice_wins(self, wins):
+        if wins is None:
+            wins = 0
+        self.__dice_wins = int(wins)
+    
+    def set_dice_losses(self, losses):
+        if losses is None:
+            losses = 0
+        self.__dice_losses = int(losses)
   
     def set_losses(self, losses):
         self.__losses = losses
@@ -38,6 +56,9 @@ class Player(commands.Cog):
 
     def add_item(self, item):
         self.__items.append(item)
+    
+    def add_money(self, amount):
+        self.__money = int(self.__money) + int(amount)
 
     def get_id(self):
         return self.__id
@@ -71,6 +92,12 @@ class Player(commands.Cog):
     
     def get_health(self):
         return self.__health
+    
+    def add_dice_win(self):
+        self.__dice_wins = int(self.__dice_wins) + 1
+    
+    def add_dice_loss(self):
+        self.__dice_losses = int(self.__dice_losses) + 1
     
     def get_health_bar(self):
         depleted_health_block = '░'
