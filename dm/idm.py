@@ -90,7 +90,7 @@ class DeathMatch(commands.Cog):
                 player = get_player(user, user_id, display_name)
                 
                 await context.send(
-                    f'''**{display_name}** [Wins: **{player.get_wins()}** | Losses: **{player.get_losses()}**] has requested a Death Match!'''
+                    f'**{display_name}** [Wins: **{player.get_wins()}** | Losses: **{player.get_losses()}**] has requested a Death Match!'
                 )
                     
                 channel_waiting_room.add_player_to_queue(player)

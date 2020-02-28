@@ -4,6 +4,11 @@ import discord
 import asyncio
 import random
 
+def is_empty(struct):
+    if struct:
+        return True
+    else:
+        return False
 
 class DiceDuel(commands.Cog):
     def __init__(self, client):
@@ -30,7 +35,7 @@ class DiceDuel(commands.Cog):
 
         self.write_player_money(player)
 
-        await context.send(f'{amount} was successfully added to {recipient.mention}.')
+        await context.send(f'{amount} gp was successfully added to {recipient.mention}.')
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="gp",
@@ -41,14 +46,14 @@ class DiceDuel(commands.Cog):
         author = context.message.author
         player = get_player(author, author.id, author.display_name)
 
-        await context.send(f'{author.mention} you have {int(player.get_money()):,}')
+        await context.send(f'{author.mention} you have {int(player.get_money()):,} gp')
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="dd",
                       description="dice duel",
                       brief="dice duel",
-                      pass_context=True)
-    async def dice_duel(self, context: commands.Context, opponent: discord.Member, amount):
+                      pass_context=False)
+    async def dice_duel(self, context: commands.Context, opponent: discord.Member, *wager):
         if context.author in self.in_dice_duel:
             return
 
@@ -57,29 +62,28 @@ class DiceDuel(commands.Cog):
         opponent_player = get_player(opponent, opponent.id, opponent.display_name)
 
         channel_id = context.channel.id
+
+        if wager:
+            amount = wager[0]
+            purse = [f' **{amount} gp**', f' for **{amount} gp**']
+        if not wager:
+            amount, purse = ['0', ['', '']]
         int_amount = self.convert_value(amount)
 
         if int_amount is None:
-            await context.send(f'{context.message.author} your wager was invalid!')
-
-            return
+            return await context.send(f'{context.message.name} your wager was invalid!')
 
         if int(challenger_player.get_money()) < int_amount:
-            await context.send(f'{context.message.author.name}, you do not have enough gp to cover the wager!')
-
-            return
+            return await context.send(f'{context.message.author.name}, you do not have enough gp to cover the wager!')
 
         await context.send(
-            f'[Wins: **{challenger_player.get_dice_wins()}** Losses: **{challenger_player.get_dice_losses()}**] {opponent.name}, {context.author.name} would like to dice duel for **{amount}**! Type "accept" if you accept!')
+            f'**{context.author.name}** [Wins: **{challenger_player.get_dice_wins()}** Losses: **{challenger_player.get_dice_losses()}**] has challenged {opponent.name} to a dice duel{purse[1]}! \nType `accept` to play!')
 
         int_amount = self.convert_value(amount)
         if int(opponent_player.get_money()) < int_amount:
-            await context.send(f'{context.message.author.name}, you do not have enough gp to cover the wager!')
-
-            return
+            return await context.send(f'{context.message.author.name}, you do not have enough gp to cover the wager!')
 
         def valid_input(message):
-
             if message.author == opponent and message.content.lower() == 'accept' and channel_id == message.channel.id:
                 return True
 
@@ -89,7 +93,7 @@ class DiceDuel(commands.Cog):
             await asyncio.wait_for(self.client.wait_for('message', check=valid_input), timeout=30)
 
             await context.send(
-                f'[Wins: **{opponent_player.get_dice_wins()}** Losses: **{opponent_player.get_dice_losses()}**] {opponent.name} accepted your dice duel!')
+                f'**{opponent.name}** [Wins: **{opponent_player.get_dice_wins()}** Losses: **{opponent_player.get_dice_losses()}**] accepted your dice duel!')
 
             winner = None
             loser = None
@@ -100,7 +104,7 @@ class DiceDuel(commands.Cog):
             self.in_dice_duel.add(opponent)
 
             while winner is None:
-                await context.send(f'{challenger.name} type "roll"! You have 30 seconds to respond.')
+                await context.send(f'{challenger.name}, type `roll`! You have 30 seconds to respond.')
                 challenger_first_roll, challenger_second_roll, timeout_player = await self.get_dice_roll(challenger,
                                                                                                          channel_id)
 
@@ -112,7 +116,7 @@ class DiceDuel(commands.Cog):
                 await context.send(
                     f'{challenger.name} you rolled a **{challenger_first_roll}** and **{challenger_second_roll}**!')
 
-                await context.send(f'{opponent.name} type "roll"! You have 30 seconds to respond.')
+                await context.send(f'{opponent.name}, type `roll`! You have 30 seconds to respond.')
                 opponent_first_roll, opponent_second_roll, timeout_player = await self.get_dice_roll(opponent,
                                                                                                      channel_id)
 
@@ -123,11 +127,11 @@ class DiceDuel(commands.Cog):
                     f'{opponent.name} you rolled a **{opponent_first_roll}** and **{opponent_second_roll}**!')
 
                 if challenger_first_roll + challenger_second_roll < opponent_first_roll + opponent_second_roll:
-                    await context.send(f'Congratulations, {opponent.name} you won {amount}!')
+                    await context.send(f'Congratulations, {opponent.name} you won{purse[0]}!')
                     winner = opponent_player
 
                 elif challenger_first_roll + challenger_second_roll > opponent_first_roll + opponent_second_roll:
-                    await context.send(f'Congratulation, {challenger.name} you won **{amount}**!')
+                    await context.send(f'Congratulation, {challenger.name} you won{purse[0]}!')
                     winner = challenger_player
 
                 else:
@@ -194,7 +198,8 @@ class DiceDuel(commands.Cog):
                 return None
 
         if value.isnumeric():
-            return int(value) if int(value) > 0 else None
+            return int(value) if int(value) >= 0 else None
+
         else:
             return None
 
