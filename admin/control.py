@@ -3,7 +3,7 @@ import discord
 import os
 
 admins = [150125122408153088, 363762044396371970]
-dir_list = ['idm', 'lot']
+dir_list = ['dice', 'dm', 'lot']
 
 class GeneralCommands(commands.Cog):
     """Lists all cogs and commands"""

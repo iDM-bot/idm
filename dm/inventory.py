@@ -3,7 +3,7 @@ import json
 
 def list_weapons():
     store_list = []
-    with open('./idm/weapon.json', 'r') as json_file:
+    with open('./dm/weapon.json', 'r') as json_file:
         data = json.load(json_file)
         for p in data:
             store_list.append(p['name'])

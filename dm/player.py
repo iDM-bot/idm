@@ -1,9 +1,8 @@
 import time
 import discord
-from discord.ext import commands
 import math as m
 
-class Player(commands.Cog):
+class Player:
 
     def __init__(self, discord_user, discord_display_name):
         self.client = discord.Client()
@@ -125,6 +124,3 @@ class Player(commands.Cog):
     
     def decrease_spec(self, spec_used):
         self.__spec = self.__spec - spec_used
-        
-def setup(client):
-    client.add_cog(Player(None, None))

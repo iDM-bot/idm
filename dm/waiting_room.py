@@ -1,14 +1,10 @@
 import discord
 from queue import Queue
-from discord.ext import commands
-import time
 import asyncio
-from _datetime import date
-import datetime
-from config import db_connection_string, server_time, bot_name
+from config import bot_name
 
 
-class WaitingRoom(commands.Cog):
+class WaitingRoom:
     """Waiting room before being matched with an opponent"""
 
   # Maximum time a player can be in the queue.
@@ -60,6 +56,3 @@ class WaitingRoom(commands.Cog):
             await asyncio.sleep(1)
 
         return
-
-def setup(client):
-    client.add_cog(WaitingRoom(None))

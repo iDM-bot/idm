@@ -77,7 +77,7 @@ async def change_prefix(context, prefix):
 
 
 def load_extensions():
-    dir_list = ['idm', 'admin']
+    dir_list = ['dice', 'dm', 'admin']
     for dir_ in dir_list:
         for filename in os.listdir(f'./{dir_}'):
             cog = filename[:-3]
