@@ -35,7 +35,7 @@ class DiceDuel(commands.Cog):
 
         self.write_player_money(player)
 
-        await context.send(f'{amount} gp was successfully added to {recipient.mention}.')
+        await context.send(f'**{amount} gp** was successfully added to {recipient.mention}.')
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="gp",
