@@ -1,45 +1,9 @@
-from discord.ext import commands 
-import discord
-from config import db_connection_string, server_time
-from pymongo import MongoClient
+from discord.ext import commands
 from dm.waiting_room import WaitingRoom
-from dm.player import Player
+from dm.player import get_player, players_table
 import asyncio
 import random
 import json
-
-mongo_client = MongoClient(db_connection_string)
-players_table = mongo_client.idm.players
-
-def get_player(discord_user, user_id, display_name):
-    result = players_table.find_one({"_id": user_id})
-
-    if result is None:
-        default_player = {
-            '_id': user_id,
-            'wins': 0,
-            'losses': 0,
-            'money': '0',
-            'items': ['dds', 'whip'],
-            'dice_wins': 0,
-            'dice_losses': 0
-        }
-
-        players_table.insert_one(default_player)
-
-        result = default_player
-
-    player = Player(discord_user, display_name)
-
-    player.set_id(user_id)
-    player.set_items(set(result['items']))
-    player.set_losses(result['losses'])
-    player.set_money(result['money'])
-    player.set_wins(result['wins'])
-    player.set_dice_wins(result['dice_wins'])
-    player.set_dice_losses(result['dice_losses'])
-
-    return player
 
 IDM_HIT_TIMEOUT = 45
 

@@ -1,14 +1,9 @@
-from dm.idm import get_player, players_table
+from dm.player import get_player, players_table
 from discord.ext import commands
 import discord
 import asyncio
 import random
 
-def is_empty(struct):
-    if struct:
-        return True
-    else:
-        return False
 
 class DiceDuel(commands.Cog):
     def __init__(self, client):
@@ -63,6 +58,9 @@ class DiceDuel(commands.Cog):
 
         channel_id = context.channel.id
 
+        if opponent.user == context.message.author:
+            return await context.send(f"You can't duel yourself!")
+
         if wager:
             amount = wager[0]
             purse = [f' **{amount} gp**', f' for **{amount} gp**']
@@ -77,7 +75,7 @@ class DiceDuel(commands.Cog):
             return await context.send(f'{context.message.author.name}, you do not have enough gp to cover the wager!')
 
         await context.send(
-            f'**{context.author.name}** [Wins: **{challenger_player.get_dice_wins()}** Losses: **{challenger_player.get_dice_losses()}**] has challenged {opponent.name} to a dice duel{purse[1]}! \nType `accept` to play!')
+            f'**{context.author.name}** [Wins: **{challenger_player.get_dice_wins()}** Losses: **{challenger_player.get_dice_losses()}**] has challenged {opponent.name} to a dice duel{purse[1]}! \nType `accept` to play or `decline` to reject.')
 
         int_amount = self.convert_value(amount)
         if int(opponent_player.get_money()) < int_amount:
@@ -87,10 +85,12 @@ class DiceDuel(commands.Cog):
             if message.author == opponent and message.content.lower() == 'accept' and channel_id == message.channel.id:
                 return True
 
+
             return False
 
         try:
             await asyncio.wait_for(self.client.wait_for('message', check=valid_input), timeout=30)
+
 
             await context.send(
                 f'**{opponent.name}** [Wins: **{opponent_player.get_dice_wins()}** Losses: **{opponent_player.get_dice_losses()}**] accepted your dice duel!')
@@ -187,7 +187,7 @@ class DiceDuel(commands.Cog):
         return True
 
     def convert_value(self, value: str):
-        multipliers = {'k': 10 ** 3, 'm': 10 ** 6, 'b': 10 ** 9, 't': 10 ** 10}
+        multipliers = {'k': 10 ** 3, 'm': 10 ** 6, 'b': 10 ** 9, 't': 10 ** 12}
 
         if value[-1] in multipliers:
             if self.is_float(value[:-1]):

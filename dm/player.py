@@ -1,6 +1,41 @@
-import time
-import discord
+from config import db_connection_string
+from pymongo import MongoClient
 import math as m
+import discord
+import time
+
+mongo_client = MongoClient(db_connection_string)
+players_table = mongo_client.idm.players
+
+def get_player(discord_user, user_id, display_name):
+    result = players_table.find_one({"_id": user_id})
+
+    if result is None:
+        default_player = {
+            '_id': user_id,
+            'wins': 0,
+            'losses': 0,
+            'money': '0',
+            'items': ['dds', 'whip'],
+            'dice_wins': 0,
+            'dice_losses': 0
+        }
+
+        players_table.insert_one(default_player)
+
+        result = default_player
+
+    player = Player(discord_user, display_name)
+
+    player.set_id(user_id)
+    player.set_items(set(result['items']))
+    player.set_losses(result['losses'])
+    player.set_money(result['money'])
+    player.set_wins(result['wins'])
+    player.set_dice_wins(result['dice_wins'])
+    player.set_dice_losses(result['dice_losses'])
+
+    return player
 
 class Player:
 
