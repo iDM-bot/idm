@@ -13,7 +13,7 @@ def get_prefix(client, message):
         return '.'
 
 client = commands.Bot(command_prefix = get_prefix, description = config.bot_description)
-# client.remove_command('help')
+client.remove_command('help')
 
 @client.event
 async def on_ready():
