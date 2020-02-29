@@ -149,18 +149,20 @@ class DeathMatch(commands.Cog):
             f'**{winner.get_discord_display_name()}** you `won` **{self.convert_number_to_string(int(winner_reward) + int(int_amount))} gp**!'
         )
 
+        # Reward loser
+        if timeout_player1 is None and timeout_player2 is None:
+            loser_reward = 0
+        
         loser_total = -1 * int_amount + loser_reward
         
         won_or_lost = 'won' if loser_total >= 0 else 'lost'
 
-        # Reward loser
-        if timeout_player1 is None and timeout_player2 is None:
-            await context.send(
-                f'**{loser.get_discord_display_name()}** you `{won_or_lost}` **{self.convert_number_to_string(-1 * int(int_amount) + int(loser_reward))} gp**!'
-            )
-
-            loser.set_losses(loser.get_losses() + 1)
-            loser.add_money(-1 * int(int_amount) + int(loser_reward))
+        await context.send(
+            f'**{loser.get_discord_display_name()}** you `{won_or_lost}` **{self.convert_number_to_string(-1 * int(int_amount) + int(loser_reward))} gp**!'
+        )
+            
+        loser.set_losses(loser.get_losses() + 1)
+        loser.add_money(-1 * int(int_amount) + int(loser_reward))
 
         winner.set_wins(winner.get_wins() + 1)
         winner.add_money(int(int_amount) + int(winner_reward))
@@ -316,14 +318,14 @@ class DeathMatch(commands.Cog):
 
     def roll_gp_drop(self):
         gp_tier = {
-            1: range(0, 20),
-            5: range(20, 35),
-            10: range(35, 47),
-            50: range(47, 50),
-            150: range(50, 51)
+            1: range(0, 800),
+            5: range(800, 1200),
+            10: range(1200, 1240),
+            50: range(1240, 1248),
+            150: range(1248, 1250)
         }
         
-        roll = random.randint(0, 50)
+        roll = random.randint(0, 1250)
         
         for gp_award, table_range in gp_tier.items():
             if roll in table_range:
