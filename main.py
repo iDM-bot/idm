@@ -6,7 +6,7 @@ import os
 
 def get_prefix(client, message):
     try:
-        with open('./admin/prefixes.json', 'r') as file:
+        with open('./general/prefixes.json', 'r') as file:
             prefixes = json.load(file)
         return prefixes[str(message.guild.id)]
     except:
@@ -42,10 +42,10 @@ async def on_message(context):
 @client.event
 async def on_guild_join(guild):
     # Custom prefixes on a per-server basis in order to prevent command overlap
-    with open('./admin/prefixes.json', 'r') as file:
+    with open('./general/prefixes.json', 'r') as file:
         prefixes = json.load(file)
     prefixes[str(guild.id)] = '.'
-    with open('./admin/prefixes.json', 'w') as file:
+    with open('./general/prefixes.json', 'w') as file:
         json.dump(prefixes, file, indent=4)
 
     # TODO: Create server join message
@@ -53,10 +53,10 @@ async def on_guild_join(guild):
 @client.event
 async def on_guild_remove(guild):
     # Removes the custom prefix from prefixes.json
-    with open('./admin/prefixes.json', 'r') as file:
+    with open('./general/prefixes.json', 'r') as file:
         prefixes = json.load(file)
     prefixes.pop(str(guild.id))
-    with open('./admin/prefixes.json', 'w') as file:
+    with open('./general/prefixes.json', 'w') as file:
         json.dump(prefixes, file, indent=4)
 
 @client.command(alias='idm_prefix')
@@ -66,10 +66,10 @@ async def change_prefix(context, prefix):
     # TODO: Change prefix quantifier (right word?) to utilize RegEx for non-alphanumeric keyboard characters
     #       idk how to regex [./<>?;:"'`!@#$%^&*()\[\]{}_+=|\\-]
     if len(prefix) == 1:
-        with open('./admin/prefixes.json', 'r') as file:
+        with open('./general/prefixes.json', 'r') as file:
             prefixes = json.load(file)
         prefixes[str(context.guild.id)] = prefix
-        with open('./admin/prefixes.json', 'w') as file:
+        with open('./general/prefixes.json', 'w') as file:
             json.dump(prefixes, file, indent=4)
         await context.send(f'Prefix changed to: {prefix}')
     else:
@@ -77,7 +77,7 @@ async def change_prefix(context, prefix):
 
 
 def load_extensions():
-    dir_list = ['dice', 'dm', 'admin']
+    dir_list = ['dice', 'dm', 'general']
     for dir_ in dir_list:
         for filename in os.listdir(f'./{dir_}'):
             cog = filename[:-3]
