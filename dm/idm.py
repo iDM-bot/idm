@@ -7,6 +7,40 @@ import json
 
 IDM_HIT_TIMEOUT = 45
 
+def convert_number_to_string(number: int):
+    multiplier_strings = {'k': 3, 'm': 6, 'b': 9, 't': 12}
+
+    if number < 0:
+        number = abs(number)
+    exponent = 0
+    while number > 0:
+        if number < 10:
+            break
+        
+        exponent += 1
+        number /= 10
+    
+    prev_multiplier = 0
+    prev_abbrev = ''
+
+    for abbrev, multiplier in multiplier_strings.items():
+        if exponent > prev_multiplier and exponent < multiplier:
+            number = number * 10 ** (exponent - prev_multiplier)
+            if number / int(number) > 1:
+                return f'{number:.2f}{prev_abbrev}'
+
+            return f'{int(number)}{prev_abbrev}'
+
+        elif exponent == multiplier:
+            if number / int(number) > 1:
+                return f'{number:.2f}{abbrev}'
+            return f'{int(number)}{abbrev}'
+        
+        prev_multiplier = multiplier
+        prev_abbrev = abbrev
+
+    return f'0'
+
 class DeathMatch(commands.Cog):
 
     def __init__(self, client):
@@ -146,7 +180,7 @@ class DeathMatch(commands.Cog):
 
         # Reward winner
         await context.send(
-            f'**{winner.get_discord_display_name()}** you `won` **{self.convert_number_to_string(int(winner_reward) + int(int_amount))} gp**!'
+            f'**{winner.get_discord_display_name()}** you `won` **{convert_number_to_string(int(winner_reward) + int(int_amount))} gp**!'
         )
 
         # Reward loser
@@ -158,7 +192,7 @@ class DeathMatch(commands.Cog):
         won_or_lost = 'won' if loser_total >= 0 else 'lost'
 
         await context.send(
-            f'**{loser.get_discord_display_name()}** you `{won_or_lost}` **{self.convert_number_to_string(-1 * int(int_amount) + int(loser_reward))} gp**!'
+            f'**{loser.get_discord_display_name()}** you `{won_or_lost}` **{convert_number_to_string(-1 * int(int_amount) + int(loser_reward))} gp**!'
         )
             
         loser.set_losses(loser.get_losses() + 1)
@@ -283,38 +317,6 @@ class DeathMatch(commands.Cog):
             "$set": {"money": str(player.get_money()),
                      "losses": player.get_losses(),
                      "wins": player.get_wins()}})
-    
-    def convert_number_to_string(self, number: int):
-        multiplier_strings = {'k': 3, 'm': 6, 'b': 9, 't': 12}
-
-        if number < 0:
-            number = abs(number)
-        exponent = 0
-        while number > 0:
-            if number < 10:
-                break
-            
-            exponent += 1
-            number /= 10
-        
-        prev_multiplier = 0
-        prev_abbrev = ''
-
-        for abbrev, multiplier in multiplier_strings.items():
-            if exponent > prev_multiplier and exponent < multiplier:
-                number = number * 10 ** (exponent - prev_multiplier)
-                if number / int(number) > 1:
-                    return f'{number:.1f}{prev_abbrev}'
-
-                return f'{int(number)}{prev_abbrev}'
-
-            elif exponent == multiplier:
-                return f'{int(number)}{abbrev}'
-            
-            prev_multiplier = multiplier
-            prev_abbrev = abbrev
-
-        return f'0'
 
     def roll_gp_drop(self):
         gp_tier = {

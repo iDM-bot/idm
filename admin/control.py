@@ -1,5 +1,6 @@
 from discord.ext import commands
 from dm.player import get_player
+from dm.idm import convert_number_to_string
 import discord
 import os
 
@@ -21,7 +22,7 @@ class GeneralCommands(commands.Cog):
 
         embed = discord.Embed(title=f"{display_name}'s Profile", description="[placeholder for future item icons]")
         embed.set_thumbnail(url=f'{user.avatar_url}')
-        embed.add_field(name="Gold", value=f"{int(player.get_money()):,} gp", inline=False)
+        embed.add_field(name="Gold", value=f"{convert_number_to_string(int(player.get_money()))} gp", inline=False)
         embed.add_field(name="Deathmatch", value=f"{player.get_wins()} wins | {player.get_losses()} losses", inline=True)
         embed.add_field(name="Dice Duel", value=f"{player.get_dice_wins()} wins | {player.get_dice_losses()} losses", inline=True)
         await context.send(embed=embed)
