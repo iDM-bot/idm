@@ -58,7 +58,7 @@ class DiceDuel(commands.Cog):
 
         channel_id = context.channel.id
 
-        if opponent.user == context.message.author:
+        if opponent == context.message.author:
             return await context.send(f"You can't duel yourself!")
 
         if wager:
@@ -110,7 +110,6 @@ class DiceDuel(commands.Cog):
 
                 if timeout_player is not None:
                     winner = opponent_player
-
                     break
 
                 await context.send(
@@ -205,7 +204,8 @@ class DiceDuel(commands.Cog):
 
     def write_player_money(self, player):
         players_table.update({"_id": player.get_id()}, {
-            "$set": {"money": str(player.get_money()), "dice_wins": player.get_dice_wins(),
+            "$set": {"money": str(player.get_money()),
+                     "dice_wins": player.get_dice_wins(),
                      "dice_losses": player.get_dice_losses()}})
 
 

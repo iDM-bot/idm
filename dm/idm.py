@@ -86,7 +86,6 @@ class DeathMatch(commands.Cog):
         return
             
     async def execute_dm(self, channel_id, context, player1, player2, int_amount, purse):
-        result = {}
 
         self.is_dm_executing[channel_id] = True
 
@@ -133,23 +132,21 @@ class DeathMatch(commands.Cog):
         elif timeout_player2 is not None:
             loser = second_hit_player
             winner = first_hit_player
-            
-        result['winner'] = winner
-        result['loser'] = loser
 
         winner.set_wins(winner.get_wins() + 1)
         winner.add_money(int(int_amount))
 
         loser.set_losses(loser.get_losses() + 1)
         loser.add_money(-1 * int(int_amount))
+
+        self.write_player_money(winner)
+        self.write_player_money(loser)
         
         await context.send(
             f'''**{winner.get_discord_display_name()}** won the death match and {purse[0]}! Sorry, **{loser.get_discord_display_name()}** you lost!'''
         )
         
         self.is_dm_executing[channel_id] = False
-
-        self.write_stats(result)
 
         return
     
@@ -220,9 +217,7 @@ class DeathMatch(commands.Cog):
 
         hit_string = self.compute_hit(attack_player, other_player, weapon, spec)
 
-        await self.attack_message(attack_player, other_player, hit_string, weapon, context)
-
-        return
+        return await self.attack_message(attack_player, other_player, hit_string, weapon, context)
 
     def calculate_spec(self, weapon):
         hits = [random.randint(0, weapon["spec_max"]) for _ in range(0, weapon["spec_hit"])]
@@ -253,15 +248,12 @@ class DeathMatch(commands.Cog):
 
         else:
             return None
-        
-    def write_stats(self, stats):
-        winner = stats['winner']
-        players_table.update({"_id": winner.get_id()}, {"$set": {"losses": winner.get_losses(), "wins": winner.get_wins()}})
-        
-        loser = stats['loser']
-        players_table.update({"_id": loser.get_id()}, {"$set":{"losses": loser.get_losses(), "wins": loser.get_wins()}})
 
-        return
+    def write_player_money(self, player):
+        players_table.update({"_id": player.get_id()}, {
+            "$set": {"money": str(player.get_money()),
+                     "losses": player.get_losses(),
+                     "wins": player.get_wins()}})
 
 def setup(client):
     client.add_cog(DeathMatch(client))
