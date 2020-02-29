@@ -68,7 +68,7 @@ class DiceDuel(commands.Cog):
 
         int_amount = self.convert_value(amount)
         if int(opponent_player.get_money()) < int_amount:
-            return await context.send(f'{context.message.author.name}, you do not have enough gp to cover the wager!')
+            return await context.send(f'{opponent_player.get_discord_display_name()} does not have enough gp to cover the wager!')
 
         def valid_input(message):
             if message.author == opponent and message.content.lower() == 'accept' or message.content.lower() == 'decline' and channel_id == message.channel.id:
@@ -128,7 +128,7 @@ class DiceDuel(commands.Cog):
                 else:
                     await context.send(f'It\'s a tie! Roll again!')
 
-            if winner == challenger:
+            if winner == challenger_player:
                 loser = opponent_player
             else:
                 loser = challenger_player

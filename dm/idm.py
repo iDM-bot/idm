@@ -52,6 +52,12 @@ class DeathMatch(commands.Cog):
         if int_amount is None:
             return await context.send(f'{context.message.author.name} your wager was invalid!')
 
+        player = get_player(user, user_id, display_name)
+                    
+        if int(player.get_money()) < max(int_amount, channel_waiting_room.get_wager_amount()):
+            return await context.send(
+                f'{context.message.author.name}, you do not have enough gp to cover the wager!')
+
         if channel_waiting_room.get_wager_amount() is -1:
             channel_waiting_room.set_wager_amount(int_amount)
             channel_waiting_room.str_amount = amount
@@ -59,16 +65,9 @@ class DeathMatch(commands.Cog):
         try:
             # Queue the person.
             if not channel_waiting_room.is_player_waiting(user_id) and not self.is_dm_executing[channel_id]:
-                player = get_player(user, user_id, display_name)
-
-                if channel_waiting_room.is_empty():
-                    if int(player.get_money()) < int_amount:
-                        return await context.send(
-                            f'{context.message.author.name}, you do not have enough gp to cover the wager!')
-                    
-                    await context.send(
-                        f'**{display_name}** [Wins: **{player.get_wins()}** | Losses: **{player.get_losses()}**] has requested a Death Match{channel_waiting_room.get_purse()[1]}!'
-                    )
+                await context.send(
+                    f'**{display_name}** [Wins: **{player.get_wins()}** | Losses: **{player.get_losses()}**] has requested a Death Match{channel_waiting_room.get_purse()[1]}!'
+                )
                     
                 channel_waiting_room.add_player_to_queue(player)
 
@@ -138,18 +137,35 @@ class DeathMatch(commands.Cog):
             loser = second_hit_player
             winner = first_hit_player
 
+        await context.send(
+            f'''**{winner.get_discord_display_name()}** `won` the death match! Sorry, **{loser.get_discord_display_name()}** you lost!'''
+        )
+
+        winner_reward = self.roll_gp_drop() * 10**6
+        loser_reward = self.roll_gp_drop() * 10**5
+
+        # Reward winner
+        await context.send(
+            f'**{winner.get_discord_display_name()}** you `won` **{self.convert_number_to_string(int(winner_reward) + int(int_amount))} gp**!'
+        )
+
+        loser_total = -1 * int_amount + loser_reward
+        
+        won_or_lost = 'won' if loser_total >= 0 else 'lost'
+
+        # Reward loser
+        await context.send(
+            f'**{loser.get_discord_display_name()}** you `{won_or_lost}` **{self.convert_number_to_string(-1 * int(int_amount) + int(loser_reward))} gp**!'
+        )
+
         winner.set_wins(winner.get_wins() + 1)
-        winner.add_money(int(int_amount))
+        winner.add_money(int(int_amount) + int(winner_reward))
 
         loser.set_losses(loser.get_losses() + 1)
-        loser.add_money(-1 * int(int_amount))
+        loser.add_money(-1 * int(int_amount) + int(loser_reward))
 
         self.write_player_money(winner)
         self.write_player_money(loser)
-        
-        await context.send(
-            f'''**{winner.get_discord_display_name()}** won the death match and {purse[0]}! Sorry, **{loser.get_discord_display_name()}** you lost!'''
-        )
 
         self.waiting_rooms[channel_id].set_wager_amount(-1)
         
@@ -264,6 +280,56 @@ class DeathMatch(commands.Cog):
             "$set": {"money": str(player.get_money()),
                      "losses": player.get_losses(),
                      "wins": player.get_wins()}})
+    
+    def convert_number_to_string(self, number: int):
+        multiplier_strings = {'k': 3, 'm': 6, 'b': 9, 't': 12}
+
+        if number < 0:
+            number = abs(number)
+        exponent = 0
+        while number > 0:
+            if number < 10:
+                break
+            
+            exponent += 1
+            number /= 10
+        
+        prev_multiplier = 0
+        prev_abbrev = ''
+
+        for abbrev, multiplier in multiplier_strings.items():
+            if exponent > prev_multiplier and exponent < multiplier:
+                number = number * 10 ** (exponent - prev_multiplier)
+                if number / int(number) > 1:
+                    return f'{number:.1f}{prev_abbrev}'
+
+                return f'{int(number)}{prev_abbrev}'
+                
+            elif exponent == multiplier:
+                return f'{int(number)}{abbrev}'
+            
+            prev_multiplier = multiplier
+            prev_abbrev = abbrev
+
+        return f'0'
+
+    def roll_gp_drop(self):
+        gp_tier = {
+            1: range(0, 20),
+            5: range(20, 35),
+            10: range(35, 47),
+            50: range(47, 50),
+            150: range(50, 51)
+        }
+        
+        roll = random.randint(0, 50)
+        
+        for gp_award, table_range in gp_tier.items():
+            if roll in table_range:
+                return gp_award
+
+        return 0
+
 
 def setup(client):
     client.add_cog(DeathMatch(client))
