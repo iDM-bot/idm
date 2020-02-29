@@ -90,3 +90,5 @@ fabric.properties
 ./config.py
 *config*
 */*config.*
+config.py
+./admin/prefixes.json
