@@ -1,9 +1,10 @@
 from discord.ext import commands
+from dm.player import get_player
 import discord
 import os
 
 admins = [150125122408153088, 363762044396371970]
-dir_list = ['idm', 'lot']
+dir_list = ['dice', 'dm', 'lot']
 
 class GeneralCommands(commands.Cog):
     """Lists all cogs and commands"""
@@ -12,7 +13,21 @@ class GeneralCommands(commands.Cog):
         self.client = client
 
     @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(name='invite', pass_context=True, brief='help command')
+    @commands.command(name='profile', pass_context=True, brief='help command', aliases=['gp', 'me'])
+    async def profile(self, context):
+        user = context.message.author
+        display_name = context.message.author.display_name
+        player = get_player(user, context.message.author.id, display_name)
+
+        embed = discord.Embed(title=f"{display_name}'s Profile", description="[placeholder for future item icons]")
+        embed.set_thumbnail(url=f'{user.avatar_url}')
+        embed.add_field(name="Gold", value=f"{int(player.get_money()):,} gp", inline=False)
+        embed.add_field(name="Deathmatch", value=f"{player.get_wins()} wins | {player.get_losses()} losses", inline=True)
+        embed.add_field(name="Dice Duel", value=f"{player.get_dice_wins()} wins | {player.get_dice_losses()} losses", inline=True)
+        await context.send(embed=embed)
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name='invite', pass_context=True, brief='invite link')
     async def invite(self, context):
         embed=discord.Embed(title="Invite iDM to your server", url="https://discordapp.com/api/oauth2/authorize?client_id=617836684511412249&permissions=0&scope=bot", color=0x28aab0)
         embed.set_thumbnail(url="https://i.imgur.com/BfueYr9.png")

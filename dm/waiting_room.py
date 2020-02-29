@@ -1,14 +1,10 @@
 import discord
 from queue import Queue
-from discord.ext import commands
-import time
 import asyncio
-from _datetime import date
-import datetime
-from config import db_connection_string, server_time, bot_name
+from config import bot_name
 
 
-class WaitingRoom(commands.Cog):
+class WaitingRoom:
     """Waiting room before being matched with an opponent"""
 
   # Maximum time a player can be in the queue.
@@ -20,6 +16,8 @@ class WaitingRoom(commands.Cog):
         self.__players = list()
         self.__MAX_WAITROOM_TIME = 120
         self.__is_dm_active = False
+        self.__wager = -1
+        self.str_amount = ''
 
     def add_player_to_queue(self, player):
         if not player.get_id() in self.__players_in_queue:
@@ -43,6 +41,21 @@ class WaitingRoom(commands.Cog):
 
     def get_max_timeout(self):
         return self.__MAX_WAITROOM_TIME
+    
+    def get_wager_amount(self):
+        return self.__wager
+
+    def set_wager_amount(self, wager):
+        self.__wager = int(wager)
+    
+    def get_purse(self):
+        if self.__wager is None:
+            return ['', '']
+        
+        return [f' **{self.str_amount} gp**', f' for **{self.str_amount} gp**']
+    
+    def is_empty(self):
+        return len(self.__players_in_queue) == 0
 
     async def run_timeout_routine(self):
         while True:
@@ -60,6 +73,3 @@ class WaitingRoom(commands.Cog):
             await asyncio.sleep(1)
 
         return
-
-def setup(client):
-    client.add_cog(WaitingRoom(None))
