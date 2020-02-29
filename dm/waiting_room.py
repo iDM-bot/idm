@@ -16,6 +16,8 @@ class WaitingRoom:
         self.__players = list()
         self.__MAX_WAITROOM_TIME = 120
         self.__is_dm_active = False
+        self.__wager = -1
+        self.str_amount = ''
 
     def add_player_to_queue(self, player):
         if not player.get_id() in self.__players_in_queue:
@@ -39,6 +41,21 @@ class WaitingRoom:
 
     def get_max_timeout(self):
         return self.__MAX_WAITROOM_TIME
+    
+    def get_wager_amount(self):
+        return self.__wager
+
+    def set_wager_amount(self, wager):
+        self.__wager = int(wager)
+    
+    def get_purse(self):
+        if self.__wager is None:
+            return ['', '']
+        
+        return [f' **{self.str_amount} gp**', f' for **{self.str_amount} gp**']
+    
+    def is_empty(self):
+        return len(self.__players_in_queue) == 0
 
     async def run_timeout_routine(self):
         while True:

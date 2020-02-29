@@ -32,17 +32,6 @@ class DiceDuel(commands.Cog):
 
         await context.send(f'**{amount} gp** was successfully added to {recipient.mention}.')
 
-    # @commands.cooldown(1, 1, commands.BucketType.user)
-    # @commands.command(name="gp",
-    #                   description="get your current gp",
-    #                   brief="add money to a player for betas",
-    #                   pass_context=True)
-    # async def gp(self, context: commands.Context):
-    #     author = context.message.author
-    #     player = get_player(author, author.id, author.display_name)
-    #
-    #     await context.send(f'{author.mention} you have {int(player.get_money()):,} gp')
-
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="dd",
                       description="dice duel",
@@ -82,15 +71,18 @@ class DiceDuel(commands.Cog):
             return await context.send(f'{context.message.author.name}, you do not have enough gp to cover the wager!')
 
         def valid_input(message):
-            if message.author == opponent and message.content.lower() == 'accept' and channel_id == message.channel.id:
+            if message.author == opponent and message.content.lower() == 'accept' or message.content.lower() == 'decline' and channel_id == message.channel.id:
                 return True
-
 
             return False
 
         try:
-            await asyncio.wait_for(self.client.wait_for('message', check=valid_input), timeout=30)
+            message = (await asyncio.wait_for(self.client.wait_for('message', check=valid_input), timeout=30)).content.lower()
+            
+            if message == 'decline':
+                await context.send(f'Sorry, {context.message.author.name} your dice duel was declined!')
 
+                return
 
             await context.send(
                 f'**{opponent.name}** [Wins: **{opponent_player.get_dice_wins()}** Losses: **{opponent_player.get_dice_losses()}**] accepted your dice duel!')

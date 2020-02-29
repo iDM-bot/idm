@@ -34,16 +34,6 @@ class DeathMatch(commands.Cog):
         user_id = context.message.author.id
         channel_id = context.message.channel.id
 
-        if wager:
-            amount = wager[0]
-            purse = [f' **{amount} gp**', f' for **{amount} gp**']
-        if not wager:
-            amount, purse = ['0', ['', '']]
-        int_amount = self.convert_value(amount)
-
-        if int_amount is None:
-            return await context.send(f'{context.message.name} your wager was invalid!')
-
         if not channel_id in self.waiting_rooms:
             self.waiting_rooms[channel_id] = WaitingRoom(context)
             self.is_dm_executing[channel_id] = False
@@ -52,18 +42,33 @@ class DeathMatch(commands.Cog):
 
         channel_waiting_room = self.waiting_rooms[channel_id]
 
+        amount = None
+
+        if wager:
+            amount = wager[0]
+
+        int_amount = self.convert_value(amount)
+
+        if int_amount is None:
+            return await context.send(f'{context.message.author.name} your wager was invalid!')
+
+        if channel_waiting_room.get_wager_amount() is -1:
+            channel_waiting_room.set_wager_amount(int_amount)
+            channel_waiting_room.str_amount = amount
+
         try:
             # Queue the person.
             if not channel_waiting_room.is_player_waiting(user_id) and not self.is_dm_executing[channel_id]:
                 player = get_player(user, user_id, display_name)
 
-                if int(player.get_money()) < int_amount:
-                    return await context.send(
-                        f'{context.message.author.name}, you do not have enough gp to cover the wager!')
-                
-                await context.send(
-                    f'**{display_name}** [Wins: **{player.get_wins()}** | Losses: **{player.get_losses()}**] has requested a Death Match{purse[1]}!'
-                )
+                if channel_waiting_room.is_empty():
+                    if int(player.get_money()) < int_amount:
+                        return await context.send(
+                            f'{context.message.author.name}, you do not have enough gp to cover the wager!')
+                    
+                    await context.send(
+                        f'**{display_name}** [Wins: **{player.get_wins()}** | Losses: **{player.get_losses()}**] has requested a Death Match{channel_waiting_room.get_purse()[1]}!'
+                    )
                     
                 channel_waiting_room.add_player_to_queue(player)
 
@@ -78,7 +83,7 @@ class DeathMatch(commands.Cog):
                 if not (channel_id in self.is_dm_executing) or not self.is_dm_executing[channel_id]:
                     self.is_dm_executing[channel_id] = True
                     dm = asyncio.get_event_loop()
-                    dm.create_task(self.execute_dm(channel_id, context, player1, player2, int_amount, purse))
+                    dm.create_task(self.execute_dm(channel_id, context, player1, player2, channel_waiting_room.get_wager_amount(), channel_waiting_room.get_purse()))
                     
         except Exception as err:
             return print(err)
@@ -141,6 +146,8 @@ class DeathMatch(commands.Cog):
 
         self.write_player_money(winner)
         self.write_player_money(loser)
+
+        self.waiting_rooms[channel_id].set_wager_amount(-1)
         
         await context.send(
             f'''**{winner.get_discord_display_name()}** won the death match and {purse[0]}! Sorry, **{loser.get_discord_display_name()}** you lost!'''
@@ -233,7 +240,10 @@ class DeathMatch(commands.Cog):
         return True
 
     def convert_value(self, value: str):
-        multipliers = {'k': 10 ** 3, 'm': 10 ** 6, 'b': 10 ** 9, 't': 10 ** 10}
+        if value is None:
+            return 0
+
+        multipliers = {'k': 10 ** 3, 'm': 10 ** 6, 'b': 10 ** 9, 't': 10 ** 12}
 
         if value[-1] in multipliers:
             if self.is_float(value[:-1]):
