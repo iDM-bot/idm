@@ -146,12 +146,12 @@ class DeathMatch(commands.Cog):
 
         self.write_player_money(winner)
         self.write_player_money(loser)
-
-        self.waiting_rooms[channel_id].set_wager_amount(-1)
         
         await context.send(
             f'''**{winner.get_discord_display_name()}** won the death match and {purse[0]}! Sorry, **{loser.get_discord_display_name()}** you lost!'''
         )
+
+        self.waiting_rooms[channel_id].set_wager_amount(-1)
         
         self.is_dm_executing[channel_id] = False
 

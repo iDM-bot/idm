@@ -49,7 +49,7 @@ class WaitingRoom:
         self.__wager = int(wager)
     
     def get_purse(self):
-        if self.__wager is None:
+        if self.__wager is None or self.str_amount is None:
             return ['', '']
         
         return [f' **{self.str_amount} gp**', f' for **{self.str_amount} gp**']
@@ -69,6 +69,7 @@ class WaitingRoom:
                         self.add_player_to_queue(player)
                     else:
                         await self.__context.send(f'{bot_name} Removing {player.get_discord_display_name()} from the waiting room, they have been waiting {player.get_wait_time():.0f} seconds.')
+                        self.__wager = -1
             
             await asyncio.sleep(1)
 
