@@ -30,7 +30,7 @@ class GeneralCommands(commands.Cog):
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name='invite', pass_context=True, brief='invite link')
     async def invite(self, context):
-        embed=discord.Embed(title="Invite iDM to your server", url="https://discordapp.com/api/oauth2/authorize?client_id=617836684511412249&permissions=0&scope=bot", color=0x28aab0)
+        embed=discord.Embed(title="Invite iDM to your server", url="https://discordapp.com/api/oauth2/authorize?client_id=617836684511412249&permissions=288832&scope=bot", color=0x28aab0)
         embed.set_thumbnail(url="https://i.imgur.com/BfueYr9.png")
         embed.add_field(name="Dueling, dicing, & lottery bot", value="A spiritual successor to the iDM bot for IRC", inline=False)
         await context.send(embed=embed)
