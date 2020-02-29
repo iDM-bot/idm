@@ -32,16 +32,16 @@ class DiceDuel(commands.Cog):
 
         await context.send(f'**{amount} gp** was successfully added to {recipient.mention}.')
 
-    @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(name="gp",
-                      description="get your current gp",
-                      brief="add money to a player for betas",
-                      pass_context=True)
-    async def gp(self, context: commands.Context):
-        author = context.message.author
-        player = get_player(author, author.id, author.display_name)
-
-        await context.send(f'{author.mention} you have {int(player.get_money()):,} gp')
+    # @commands.cooldown(1, 1, commands.BucketType.user)
+    # @commands.command(name="gp",
+    #                   description="get your current gp",
+    #                   brief="add money to a player for betas",
+    #                   pass_context=True)
+    # async def gp(self, context: commands.Context):
+    #     author = context.message.author
+    #     player = get_player(author, author.id, author.display_name)
+    #
+    #     await context.send(f'{author.mention} you have {int(player.get_money()):,} gp')
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="dd",
