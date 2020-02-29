@@ -154,15 +154,16 @@ class DeathMatch(commands.Cog):
         won_or_lost = 'won' if loser_total >= 0 else 'lost'
 
         # Reward loser
-        await context.send(
-            f'**{loser.get_discord_display_name()}** you `{won_or_lost}` **{self.convert_number_to_string(-1 * int(int_amount) + int(loser_reward))} gp**!'
-        )
+        if timeout_player1 is None and timeout_player2 is None:
+            await context.send(
+                f'**{loser.get_discord_display_name()}** you `{won_or_lost}` **{self.convert_number_to_string(-1 * int(int_amount) + int(loser_reward))} gp**!'
+            )
+
+            loser.set_losses(loser.get_losses() + 1)
+            loser.add_money(-1 * int(int_amount) + int(loser_reward))
 
         winner.set_wins(winner.get_wins() + 1)
         winner.add_money(int(int_amount) + int(winner_reward))
-
-        loser.set_losses(loser.get_losses() + 1)
-        loser.add_money(-1 * int(int_amount) + int(loser_reward))
 
         self.write_player_money(winner)
         self.write_player_money(loser)
@@ -304,7 +305,7 @@ class DeathMatch(commands.Cog):
                     return f'{number:.1f}{prev_abbrev}'
 
                 return f'{int(number)}{prev_abbrev}'
-                
+
             elif exponent == multiplier:
                 return f'{int(number)}{abbrev}'
             
