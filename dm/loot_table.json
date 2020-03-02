@@ -1,78 +1,386 @@
 {
-  "common": [
-    {
-      "name": "Sharks",
-      "value": 250,
-      "quantity": [5, 20]
-    },
-    {
-      "name": "Blood Runes",
-      "value": 368,
-      "quantity": [50, 200]
-    },
-    {
-      "name": "Death Runes",
-      "value": 220,
-      "quantity": [50, 200]
-    },
-    {
-      "name": "Amulet of glory (4)",
-      "value": 12000,
-      "quantity": [1, 1]
-    }
-  ],
-  "uncommon": [
-    {
-      "name": "Rune Platebody",
-      "value": 38000,
-      "quantity": [1, 1]
-    },
-    {
-      "name": "Mystic robe top",
-      "value": 72800,
-      "quantity": [1, 1]
-    },
-    {
-      "name": "Dragon boots",
-      "value": 285000,
-      "quantity": [1, 1],
-      "rarity": []
-    }
-  ],
-  "rare": [
-    {
-      "name": "Dharok's Helm",
-      "value": 300000,
-      "quantity": [1, 1]
-    },
-    {
-      "name": "Dharok's Platebody",
-      "value": 565200,
-      "quantity": [1, 1]
-    },
-    {
-      "name": "Dharok's Platelegs",
-      "value": 900000,
-      "quantity": [1, 1]
-    },
-    {
-      "name": "Dharok's Axe",
-      "value": 654300,
-      "quantity": [1, 1]
-    }
-  ],
-  "super": [
-    {
-      "name": "Abyssal whip",
-      "value": 2147483647,
-      "quantity": [1, 1]
-    }
-  ],
-  "ultra": [
-    {
-      "name": "Rubber Chicken",
-      "value": 2147483647,
-      "quantity": [1, 1]
-    }
-  ]
+    "common": [
+        {
+          "name": "Cannonball",
+          "id": 2,
+          "price": 190,
+          "quantity": [10, 75]
+        },
+        {
+          "name": "Coal",
+          "id": 453,
+          "price": 136,
+          "quantity": [10, 100]
+        },
+        {
+          "name": "Death rune",
+          "id": 560,
+          "price": 224,
+          "quantity": [10, 75]
+        },
+        {
+          "name": "Blood rune",
+          "id": 565,
+          "price": 385,
+          "quantity": [10, 75]
+        }
+    ],
+    "uncommon": [
+        {
+          "name": "Rune platebody",
+          "id": 1127,
+          "value": 38000,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Mystic robe top",
+          "id": 4091,
+          "value": 72800,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Dragon boots",
+          "id": 11840,
+          "value": 285000,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Rune platelegs",
+          "id": 1079,
+          "price": 37800,
+          "quantity": [1, 2]
+        },
+        {
+          "name": "Rune plateskirt",
+          "id": 1093,
+          "price": 37800,
+          "quantity": [1, 2]
+        },
+        {
+          "name": "Rune full helm",
+          "id": 1163,
+          "price": 20600,
+          "quantity": [1, 2]
+        },
+        {
+          "name": "Amulet of glory(4)",
+          "id": 1712,
+          "price": 11900,
+          "quantity": [1, 2]
+        },
+        {
+          "name": "Godsword shard 1",
+          "id": 11818,
+          "price": 159900,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Godsword shard 2",
+          "id": 11820,
+          "price": 158100,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Godsword shard 3",
+          "id": 11822,
+          "price": 167300,
+          "quantity": [1, 1]
+        }
+    ],
+    "rare": [
+        {
+          "name": "Ahrim's hood",
+          "id": 4708,
+          "price": 65500,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Ahrim's staff",
+          "id": 4710,
+          "price": 107700,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Ahrim's robetop",
+          "id": 4712,
+          "price": 2100000,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Dharok's helm",
+          "id": 4716,
+          "price": 254400,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Dharok's platebody",
+          "id": 4720,
+          "price": 989600,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Dharok's platelegs",
+          "id": 4722,
+          "price": 963900,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Guthan's helm",
+          "id": 4724,
+          "price": 670600,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Guthan's platebody",
+          "id": 4728,
+          "price": 1400000,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Guthan's chainskirt",
+          "id": 4730,
+          "price": 445300,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Torag's helm",
+          "id": 4745,
+          "price": 112000,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Torag's hammers",
+          "id": 4747,
+          "price": 96100,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Torag's platebody",
+          "id": 4749,
+          "price": 226000,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Torag's platelegs",
+          "id": 4751,
+          "price": 257500,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Verac's helm",
+          "id": 4753,
+          "price": 146300,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Verac's flail",
+          "id": 4755,
+          "price": 148400,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Verac's brassard",
+          "id": 4757,
+          "price": 189500,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Verac's plateskirt",
+          "id": 4759,
+          "price": 491200,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Seers ring",
+          "id": 6731,
+          "price": 302300,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Archers ring",
+          "id": 6733,
+          "price": 4100000,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Warrior ring",
+          "id": 6735,
+          "price": 39200,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Berserker ring",
+          "id": 6737,
+          "price": 2400000,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Mage's book",
+          "id": 6889,
+          "price": 5400000,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Infinity top",
+          "id": 6916,
+          "price": 4000000,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Infinity boots",
+          "id": 6920,
+          "price": 1200000,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Infinity gloves",
+          "id": 6922,
+          "price": 1800000,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Infinity bottoms",
+          "id": 6924,
+          "price": 4300000,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Ring of the gods",
+          "id": 12601,
+          "price": 18800000,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Tyrannical ring",
+          "id": 12603,
+          "price": 1300000,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Treasonous ring",
+          "id": 12605,
+          "price": 256500,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Eternal boots",
+          "id": 13235,
+          "price": 4000000,
+          "quantity": [1, 1]
+        }
+    ],
+    "super": [
+        {
+          "name": "Onyx necklace",
+          "id": 6577,
+          "price": 2200000,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Ring of stone",
+          "id": 6583,
+          "price": 912100,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Amulet of fury",
+          "id": 6585,
+          "price": 2300000,
+          "quantity": [1, 1]
+        },
+        {"name": "Armadyl hilt",
+          "id": 11810,
+          "price": 11600000,
+          "quantity": [1, 1]
+        },
+        {"name": "Bandos hilt",
+          "id": 11812,
+          "price": 9300000,
+          "quantity": [1, 1]
+        },
+        {"name": "Saradomin hilt",
+          "id": 11814,
+          "price": 34200000,
+          "quantity": [1, 1]
+        },
+        {"name": "Zamorak hilt",
+          "id": 11816,
+          "price": 3800000,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Zamorakian spear",
+          "id": 11824,
+          "price": 15000000,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Armadyl helmet",
+          "id": 11826,
+          "price": 5000000,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Armadyl chestplate",
+          "id": 11828,
+          "price": 38800000,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Bandos chestplate",
+          "id": 11832,
+          "price": 19000000,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Bandos tassets",
+          "id": 11834,
+          "price": 28800000,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Bandos boots",
+          "id": 11836,
+          "price": 185700,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Saradomin sword",
+          "id": 11838,
+          "price": 697200,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Armadyl plateskirt",
+          "id": 12474,
+          "price": 38200,
+          "quantity": [1, 1]
+        }
+    ],
+    "ultra": [
+        {
+          "name": "Rubber Chicken",
+          "id": 99999,
+          "price": 2147483647,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Dragon claws",
+          "id": 13652,
+          "price": 54100000,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Kodai wand",
+          "id": 21006,
+          "price": 82000000,
+          "quantity": [1, 1]
+        },
+        {
+          "name": "Dragon kiteshield",
+          "id": 21895,
+          "price": 55000000,
+          "quantity": [1, 1]
+        }
+    ]
 }

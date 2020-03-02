@@ -72,7 +72,7 @@ class Help(commands.Cog):
                 i = (len(help_pages) - 1)
                 await message.edit(embed=page_embed(i))
 
-            response = await self.client.wait_for('reaction_add', timeout=30)
+            response = await self.client.wait_for('reaction_add', timeout=60)
             if response is None:
                 break
             if str(response[1]) != 'iDM#7035' and str(response[1]) != context.message.author.id:   # So bot doesn't trigger from it's own reactions

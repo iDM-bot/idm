@@ -24,7 +24,7 @@ def convert_number_to_string(number: int):
     prev_abbrev = ''
 
     for abbrev, multiplier in multiplier_strings.items():
-        if exponent > prev_multiplier and exponent < multiplier:
+        if prev_multiplier < exponent < multiplier:
             number = number * 10 ** (exponent - prev_multiplier)
             if number / int(number) > 1:
                 return f'{number:.2f}{prev_abbrev}'
